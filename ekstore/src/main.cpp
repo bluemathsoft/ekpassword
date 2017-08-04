@@ -27,8 +27,11 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <iostream>
 #include "encdec.h"
+#include "json.h"
 
 using std::ios;
+
+using json = nlohmann::json;
 
 int main (void)
 {
@@ -106,6 +109,18 @@ int main (void)
 
     printf("Decrypted text is:\n");
     printf("%s\n", decryptedtext);
+
+    json jsonobj;
+    std::stringstream ss((char *)decryptedtext);
+    jsonobj << ss;
+
+    json::iterator it = jsonobj.begin();
+    while(it != jsonobj.end()) {
+      std::cout << (*it)["url"] << std::endl;
+      std::cout << (*it)["password"] << std::endl;
+      it++;
+    }
+
 
     delete[] readciphertext;
     delete[] decryptedtext;
