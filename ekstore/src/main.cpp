@@ -24,7 +24,11 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 #include <openssl/err.h>
 #include <string.h>
 #include <sstream>
+#include <fstream>
+#include <iostream>
 #include "encdec.h"
+
+using std::ios;
 
 int main (void)
 {
@@ -53,7 +57,6 @@ int main (void)
 
   unsigned char *ciphertext = new unsigned char[2*plainstr.size()];
 
-  unsigned char *decryptedtext = new unsigned char[2*plainstr.size()];
 
   int decryptedtext_len, ciphertext_len;
 
@@ -63,23 +66,54 @@ int main (void)
   OPENSSL_config(NULL);
 
   /* Encrypt the plaintext */
-  ciphertext_len = encrypt (plaintext, strlen ((char *)plaintext), key, iv,
+  ciphertext_len = encrypt(plaintext, strlen ((char *)plaintext), key, iv,
                             ciphertext);
 
-  /* Do something useful with the ciphertext here */
-  printf("Ciphertext is:\n");
-  BIO_dump_fp (stdout, (const char *)ciphertext, ciphertext_len);
 
-  /* Decrypt the ciphertext */
-  decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
-    decryptedtext);
+  // ---
+  // Write encrypted text to binary file
+  //
+  std::ofstream encofs;
+  encofs.open("ekdatabase.enc",ios::out|ios::binary|ios::trunc);
+  if(encofs.is_open()) {
+    encofs << ciphertext;
+  } else {
+    std::cerr << "Failed to open file to write" << std::endl;
+  }
+  encofs.close();
+  // ---
 
-  /* Add a NULL terminator. We are expecting printable text */
-  decryptedtext[decryptedtext_len] = '\0';
 
-  /* Show the decrypted text */
-  printf("Decrypted text is:\n");
-  printf("%s\n", decryptedtext);
+
+  // ---
+  // Read encrypted text from binary file
+  //
+  std::ifstream encifs("ekdatabase.enc",ios::binary|ios::in);
+  if(encifs.is_open()) {
+    encifs.seekg(0,encifs.end);
+    size_t filesize = encifs.tellg();
+    encifs.seekg(0,encifs.beg);
+
+    unsigned char *readciphertext = new unsigned char[filesize];
+    unsigned char *decryptedtext = new unsigned char[filesize];
+
+    encifs.read((char*)readciphertext, filesize);
+    encifs.close();
+
+    decryptedtext_len = decrypt(ciphertext, ciphertext_len, key, iv,
+      decryptedtext);
+    decryptedtext[decryptedtext_len] = '\0';
+
+    printf("Decrypted text is:\n");
+    printf("%s\n", decryptedtext);
+
+    delete[] readciphertext;
+    delete[] decryptedtext;
+
+  } else {
+    std::cerr << "Failed to open file to read" << std::endl;
+  }
+  // ---
 
   /* Clean up */
   EVP_cleanup();
