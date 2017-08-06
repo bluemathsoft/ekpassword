@@ -28,13 +28,34 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 #include <iostream>
 #include "encdec.h"
 #include "json.h"
+#include "args.h"
 
 using std::ios;
 
 using json = nlohmann::json;
 
-int main (void)
+int main (int argc, char *argv[])
 {
+
+  args::ArgumentParser parser("ekstore CLI", "");
+  args::HelpFlag helpOpt(parser,"help","Display this help menu",{'h',"help"});
+
+  try {
+    parser.ParseCLI(argc, argv);
+  } catch(args::Help) {
+    std::cout << parser;
+    return 0;
+  } catch(args::ParseError e) {
+    std::cerr << e.what() << std::endl;
+    std::cerr << parser;
+    return 1;
+  }
+
+
+
+
+
+
   /* Set up the key and iv. Do I need to say to not hard code these in a
    * real application? :-)
    */
