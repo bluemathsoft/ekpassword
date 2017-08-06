@@ -40,6 +40,16 @@ int main (int argc, char *argv[])
   args::ArgumentParser parser("ekstore CLI", "");
   args::HelpFlag helpOpt(parser,"help","Display this help menu",{'h',"help"});
 
+  args::Flag addOpt(
+        parser,"add","Add entry",{"add"});
+  args::Flag removeOpt(
+        parser,"remove","Remove entry",{"remove"});
+  args::Flag listOpt(
+        parser,"list","List entries",{"list"});
+
+  args::ValueFlag<std::string> urlOpt(
+        parser,"url","URL of website to store password for",{"url"});
+
   try {
     parser.ParseCLI(argc, argv);
   } catch(args::Help) {
@@ -51,6 +61,30 @@ int main (int argc, char *argv[])
     return 1;
   }
 
+  if(addOpt) {
+    std::string url = args::get(urlOpt);
+    if(url.length() <= 0) {
+      std::cerr << "Missing URL" << std::endl;
+      return 1;
+    }
+    std::cout << "Adding " << std::endl;
+    std::cout << "URL " << url << std::endl;
+    return 0;
+  }
+  if(removeOpt) {
+    std::string url = args::get(urlOpt);
+    if(url.length() <= 0) {
+      std::cerr << "Missing URL" << std::endl;
+      return 1;
+    }
+    std::cout << "Removing " << std::endl;
+    std::cout << "URL " << url << std::endl;
+    return 0;
+  }
+  if(listOpt) {
+    std::cout << "List all entries (TODO) " << std::endl;
+    return 0;
+  }
 
 
 
