@@ -22,6 +22,7 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <openssl/sha.h>
 #include <string.h>
 #include <sstream>
 #include <fstream>
@@ -33,6 +34,21 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 using std::ios;
 
 using json = nlohmann::json;
+
+void computePasswordSHA256(const char *string, char outputBuffer[65])
+{
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+  SHA256_CTX sha256;
+  SHA256_Init(&sha256);
+  SHA256_Update(&sha256, string, strlen(string));
+  SHA256_Final(hash, &sha256);
+  int i = 0;
+  for(i = 0; i < SHA256_DIGEST_LENGTH; i++)
+  {
+    sprintf(outputBuffer + (i * 2), "%02x", hash[i]); // TODO: use snprintf
+  }
+  outputBuffer[64] = 0;
+}
 
 int main (int argc, char *argv[])
 {
@@ -87,7 +103,16 @@ int main (int argc, char *argv[])
   }
 
 
+  std::string plainpassword;
+  std::cout << "Enter Password: ";
+  std::cin >> plainpassword;
 
+  char passwordsha[65];
+  computePasswordSHA256(plainpassword.c_str(), passwordsha);
+
+  std::cout << "Password SHA " << std::string(passwordsha) << std::endl;
+
+  return 0;
 
 
   /* Set up the key and iv. Do I need to say to not hard code these in a
