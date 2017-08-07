@@ -20,12 +20,25 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "datastore.h"
+#include "encdec.h"
+
+DataStore::DataStore(const std::string &filepath, const std::string &password)
+{
+  m_filepath = filepath;
+
+  // Compute SHA256 hash of password
+  m_encpassword = computeSHA256(password);
+
+}
 
 const DataStore::EntryList& DataStore::listEntries() {
   return m_entries;
 }
 
 void DataStore::load() {
+  // Read the file
+
+  // Use password to decrypt the file
 
 }
 

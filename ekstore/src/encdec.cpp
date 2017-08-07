@@ -19,9 +19,12 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
+#include <encdec.h>
+
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <openssl/sha.h>
 
 void handleErrors(void)
 {
@@ -105,4 +108,22 @@ int decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key,
   EVP_CIPHER_CTX_free(ctx);
 
   return plaintext_len;
+}
+
+std::string computeSHA256(const std::string& input)
+{
+  const char *string = input.c_str();
+  char outputBuffer[65];
+  unsigned char hash[SHA256_DIGEST_LENGTH];
+  SHA256_CTX sha256;
+  SHA256_Init(&sha256);
+  SHA256_Update(&sha256, string, strlen(string));
+  SHA256_Final(hash, &sha256);
+  int i = 0;
+  for(i = 0; i < SHA256_DIGEST_LENGTH; i++)
+  {
+    sprintf(outputBuffer + (i * 2), "%02x", hash[i]); // TODO: use snprintf
+  }
+  outputBuffer[64] = 0;
+  return std::string(outputBuffer);
 }

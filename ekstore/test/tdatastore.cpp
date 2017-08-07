@@ -36,13 +36,13 @@ DataStoreTest::tearDown()
 void
 DataStoreTest::testConstructor()
 {
-  DataStore dstore("/tmp/somepath.enc");
+  DataStore dstore("/tmp/somepath.enc","masterpassword");
   CPPUNIT_ASSERT(true);
 }
 
 void DataStoreTest::testOps()
 {
-  DataStore dstore("/tmp/somepath.enc");
+  DataStore dstore("/tmp/somepath.enc","masterpassword");
   dstore.load();
 
   CPPUNIT_ASSERT(dstore.listEntries().size() == 0);

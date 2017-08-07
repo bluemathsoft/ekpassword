@@ -49,9 +49,12 @@ public:
 private:
   std::string m_filepath;
   EntryList m_entries;
+  std::string m_encpassword;
 
 public:
-  DataStore(std::string filepath):m_filepath(filepath) {}
+  DataStore(
+    const std::string& filepath,
+    const std::string& password);
 
   void save();
   void load();
