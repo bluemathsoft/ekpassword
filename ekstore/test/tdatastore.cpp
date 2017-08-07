@@ -51,4 +51,6 @@ void DataStoreTest::testOps()
   dstore.addEntry(entry);
 
   CPPUNIT_ASSERT(dstore.listEntries().size() == 1);
+
+  dstore.save();
 }

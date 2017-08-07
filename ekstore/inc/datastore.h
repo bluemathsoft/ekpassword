@@ -21,6 +21,9 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 
 #include <vector>
 #include <string>
+#include "json.h"
+
+using json = nlohmann::json;
 
 class DataStore {
 
@@ -28,20 +31,23 @@ public:
 
   class Entry {
   public:
-    std::string hostname;
-    std::string username;
-    std::string password;
-    std::string category;
+    std::string m_hostname;
+    std::string m_username;
+    std::string m_password;
+    std::string m_category;
 
-    Entry(const std::string& ihostname,
-          const std::string& iusername,
-          const std::string& ipassword,
-          const std::string& icategory=""):
-      hostname(ihostname),
-      username(iusername),
-      password(ipassword),
-      category(icategory)
+    Entry(const std::string& hostname,
+          const std::string& username,
+          const std::string& password,
+          const std::string& category=""):
+      m_hostname(hostname),
+      m_username(username),
+      m_password(password),
+      m_category(category)
     {}
+
+    const json toJSON();
+    void fromJSON(const json &);
   };
 
   typedef std::vector<Entry> EntryList;
@@ -50,6 +56,9 @@ private:
   std::string m_filepath;
   EntryList m_entries;
   std::string m_encpassword;
+
+  const json toJSON();
+  void fromJSON(const json&);
 
 public:
   DataStore(
