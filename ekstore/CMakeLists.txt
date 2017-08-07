@@ -9,8 +9,9 @@ if(APPLE)
   set(OPENSSL_LIB_DIR "${OPENSSL_ROOT_DIR}/lib")
   set(CPPUNIT_INC_DIR "/usr/local/opt/cppunit/include")
   set(CPPUNIT_LIB_DIR "/usr/local/opt/cppunit/lib")
-  set(CPPUNIT_LIBRARY "cppunit")
 endif()
+
+set(CPPUNIT_LIBRARY "cppunit")
 
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "gcc")
