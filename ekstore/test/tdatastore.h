@@ -28,10 +28,12 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 class DataStoreTest : public CppUnit::TestFixture {
   CPPUNIT_TEST_SUITE(DataStoreTest);
   CPPUNIT_TEST(testConstructor);
+  CPPUNIT_TEST(testOps);
   CPPUNIT_TEST_SUITE_END();
 
 public:
   void setUp();
   void tearDown();
   void testConstructor();
+  void testOps();
 };

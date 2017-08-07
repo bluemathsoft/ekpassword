@@ -39,3 +39,16 @@ DataStoreTest::testConstructor()
   DataStore dstore("/tmp/somepath.enc");
   CPPUNIT_ASSERT(true);
 }
+
+void DataStoreTest::testOps()
+{
+  DataStore dstore("/tmp/somepath.enc");
+  dstore.load();
+
+  CPPUNIT_ASSERT(dstore.listEntries().size() == 0);
+
+  DataStore::Entry entry("http://www.google.com","john.doe@gmail.com","pass123");
+  dstore.addEntry(entry);
+
+  CPPUNIT_ASSERT(dstore.listEntries().size() == 1);
+}

@@ -27,19 +27,28 @@ class DataStore {
 public:
 
   class Entry {
+  public:
     std::string hostname;
+    std::string username;
     std::string password;
     std::string category;
 
-    Entry(const std::string& hostname,
-          const std::string& password,
-          const std::string& category="");
+    Entry(const std::string& ihostname,
+          const std::string& iusername,
+          const std::string& ipassword,
+          const std::string& icategory=""):
+      hostname(ihostname),
+      username(iusername),
+      password(ipassword),
+      category(icategory)
+    {}
   };
 
   typedef std::vector<Entry> EntryList;
 
 private:
   std::string m_filepath;
+  EntryList m_entries;
 
 public:
   DataStore(std::string filepath):m_filepath(filepath) {}
@@ -49,6 +58,6 @@ public:
 
   void addEntry(const Entry& entry);
   void removeEntry(const unsigned int index);
-  EntryList listEntries();
+  const EntryList& listEntries();
 
 };

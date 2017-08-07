@@ -21,3 +21,20 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 
 #include "datastore.h"
 
+const DataStore::EntryList& DataStore::listEntries() {
+  return m_entries;
+}
+
+void DataStore::load() {
+
+}
+
+void DataStore::save() {
+
+}
+
+void DataStore::addEntry(const Entry &entry) {
+  auto encEntry = entry;
+  // TODO encrypt password in entry
+  m_entries.push_back(encEntry);
+}
