@@ -50,7 +50,7 @@ void computePasswordSHA256(const char *string, char outputBuffer[65])
   outputBuffer[64] = 0;
 }
 
-int main (int argc, char *argv[])
+int mainCLI (int argc, char *argv[])
 {
 
   args::ArgumentParser parser("ekstore CLI", "");
@@ -63,8 +63,9 @@ int main (int argc, char *argv[])
   args::Flag listOpt(
         parser,"list","List entries",{"list"});
 
-  args::ValueFlag<std::string> urlOpt(
-        parser,"url","URL of website to store password for",{"url"});
+  args::ValueFlag<std::string> hostnameOpt(
+        parser,"hostname","Hostname of website to store password for",
+        {"hostname"});
 
   try {
     parser.ParseCLI(argc, argv);
@@ -78,23 +79,23 @@ int main (int argc, char *argv[])
   }
 
   if(addOpt) {
-    std::string url = args::get(urlOpt);
-    if(url.length() <= 0) {
-      std::cerr << "Missing URL" << std::endl;
+    std::string hostname = args::get(hostnameOpt);
+    if(hostname.length() <= 0) {
+      std::cerr << "Missing Hostname" << std::endl;
       return 1;
     }
     std::cout << "Adding " << std::endl;
-    std::cout << "URL " << url << std::endl;
+    std::cout << "Hostname " << hostname << std::endl;
     return 0;
   }
   if(removeOpt) {
-    std::string url = args::get(urlOpt);
-    if(url.length() <= 0) {
-      std::cerr << "Missing URL" << std::endl;
+    std::string hostname = args::get(hostnameOpt);
+    if(hostname.length() <= 0) {
+      std::cerr << "Missing Hostname" << std::endl;
       return 1;
     }
     std::cout << "Removing " << std::endl;
-    std::cout << "URL " << url << std::endl;
+    std::cout << "Hostname " << hostname << std::endl;
     return 0;
   }
   if(listOpt) {

@@ -19,36 +19,19 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <vector>
-#include <string>
+#pragma once
 
-class DataStore {
+#include "datastore.h"
 
-public:
+#include <cppunit/extensions/HelperMacros.h>
 
-  class Entry {
-    std::string hostname;
-    std::string password;
-    std::string category;
-
-    Entry(const std::string& hostname,
-          const std::string& password,
-          const std::string& category="");
-  };
-
-  typedef std::vector<Entry> EntryList;
-
-private:
-  std::string m_filepath;
+class DataStoreTest : public CppUnit::TestFixture {
+  CPPUNIT_TEST_SUITE(DataStoreTest);
+  CPPUNIT_TEST(testConstructor);
+  CPPUNIT_TEST_SUITE_END();
 
 public:
-  DataStore(std::string filepath):m_filepath(filepath) {}
-
-  void save();
-  void load();
-
-  void addEntry(const Entry& entry);
-  void removeEntry(const unsigned int index);
-  EntryList listEntries();
-
+  void setUp();
+  void tearDown();
+  void testConstructor();
 };

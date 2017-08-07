@@ -19,36 +19,23 @@ along with ekpassword. If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <vector>
-#include <string>
+#include "tdatastore.h"
 
-class DataStore {
+CPPUNIT_TEST_SUITE_REGISTRATION(DataStoreTest);
 
-public:
+void
+DataStoreTest::setUp()
+{
+}
 
-  class Entry {
-    std::string hostname;
-    std::string password;
-    std::string category;
+void
+DataStoreTest::tearDown()
+{
+}
 
-    Entry(const std::string& hostname,
-          const std::string& password,
-          const std::string& category="");
-  };
-
-  typedef std::vector<Entry> EntryList;
-
-private:
-  std::string m_filepath;
-
-public:
-  DataStore(std::string filepath):m_filepath(filepath) {}
-
-  void save();
-  void load();
-
-  void addEntry(const Entry& entry);
-  void removeEntry(const unsigned int index);
-  EntryList listEntries();
-
-};
+void
+DataStoreTest::testConstructor()
+{
+  DataStore dstore("/tmp/somepath.enc");
+  CPPUNIT_ASSERT(true);
+}
