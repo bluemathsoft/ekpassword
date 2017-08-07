@@ -45,6 +45,7 @@ public:
       m_password(password),
       m_category(category)
     {}
+    Entry() {}
 
     const json toJSON();
     void fromJSON(const json &);

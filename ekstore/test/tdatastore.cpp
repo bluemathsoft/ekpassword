@@ -42,15 +42,19 @@ DataStoreTest::testConstructor()
 
 void DataStoreTest::testOps()
 {
-  DataStore dstore("/tmp/somepath.enc","masterpassword");
-  dstore.load();
+  DataStore dstore1("/tmp/somepath.enc","masterpassword");
+  dstore1.load();
 
-  CPPUNIT_ASSERT(dstore.listEntries().size() == 0);
+  CPPUNIT_ASSERT(dstore1.listEntries().size() == 0);
 
   DataStore::Entry entry("http://www.google.com","john.doe@gmail.com","pass123");
-  dstore.addEntry(entry);
+  dstore1.addEntry(entry);
 
-  CPPUNIT_ASSERT(dstore.listEntries().size() == 1);
+  CPPUNIT_ASSERT(dstore1.listEntries().size() == 1);
 
-  dstore.save();
+  dstore1.save();
+
+  DataStore dstore2("/tmp/somepath.enc","masterpassword");
+  dstore2.load();
+  CPPUNIT_ASSERT(dstore1.listEntries().size() == 1);
 }

@@ -40,10 +40,37 @@ const DataStore::EntryList& DataStore::listEntries() {
 }
 
 void DataStore::load() {
-  // Read the file
 
-  // Use password to decrypt the file
+  unsigned char *iv = (unsigned char *)"0123456789012345"; // TODO : no hardcoding
+  unsigned char *key = (unsigned char *)m_encpassword.c_str();
+  std::ifstream encifs(m_filepath,ios::binary|ios::in);
 
+  if(encifs.is_open()) {
+    encifs.seekg(0,encifs.end);
+    size_t filesize = encifs.tellg();
+    encifs.seekg(0,encifs.beg);
+
+    if(filesize <= 0) {
+      std::cout << "Empty file" << std::endl;
+      return;
+    }
+
+    unsigned char *readciphertext = new unsigned char[filesize];
+    unsigned char *decryptedtext = new unsigned char[filesize];
+
+    encifs.read((char*)readciphertext, filesize);
+    encifs.close();
+
+    size_t decryptedtext_len = decrypt(readciphertext, filesize, key, iv,
+      decryptedtext);
+    decryptedtext[decryptedtext_len] = '\0';
+
+    json j;
+    std::stringstream ss((char *)decryptedtext);
+    j << ss;
+
+    fromJSON(j);
+  }
 }
 
 void DataStore::save() {
@@ -87,8 +114,15 @@ const json DataStore::toJSON() {
   return j;
 }
 
-void DataStore::fromJSON(const json &) {
-
+void DataStore::fromJSON(const json& j) {
+  m_entries.clear();
+  json::const_iterator it = j.begin();
+  while(it != j.end()) {
+    DataStore::Entry entry;
+    entry.fromJSON(*it);
+    m_entries.push_back(entry);
+    it++;
+  }
 }
 
 const json DataStore::Entry::toJSON() {
@@ -100,6 +134,9 @@ const json DataStore::Entry::toJSON() {
   return j;
 }
 
-void DataStore::Entry::fromJSON(const json &) {
-
+void DataStore::Entry::fromJSON(const json& j) {
+  m_hostname = j["hostname"];
+  m_username = j["username"];
+  m_password = j["password"];
+  m_category = j["category"];
 }
